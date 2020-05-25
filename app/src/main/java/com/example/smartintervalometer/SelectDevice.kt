@@ -10,7 +10,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_select_device.*
+import kotlinx.android.synthetic.main.select_device_activity.*
+import kotlinx.android.synthetic.main.simple_list_item_dark.*
 
 class SelectDevice : AppCompatActivity() {
 
@@ -25,15 +26,11 @@ class SelectDevice : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_select_device)
+        setContentView(R.layout.select_device_activity)
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-        if (mBluetoothAdapter == null){
-            Toast.makeText(applicationContext,"this device doesn't support bluetooth",Toast.LENGTH_SHORT).show()
-            return
-        }
 
-        if (!mBluetoothAdapter!!.isEnabled){
+        if (!mBluetoothAdapter.isEnabled){
             val enableBluetoothIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
             startActivityForResult(enableBluetoothIntent, REQUEST_ENABLE_BLUETOOTH)
         }
@@ -43,7 +40,7 @@ class SelectDevice : AppCompatActivity() {
     }
 
     private fun pairedDeviceList(){
-        mPairedDevices = mBluetoothAdapter!!.bondedDevices
+        mPairedDevices = mBluetoothAdapter.bondedDevices
         val list : ArrayList<BluetoothDevice> = ArrayList()
         val nameList : ArrayList<String> = ArrayList()
 
@@ -57,7 +54,8 @@ class SelectDevice : AppCompatActivity() {
             Toast.makeText(applicationContext,"no paired devices",Toast.LENGTH_SHORT).show()
         }
 
-        val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, nameList)
+        val adapter = ArrayAdapter(this, R.layout.simple_list_item_dark, nameList)
+
         device_select_list.adapter = adapter;
         device_select_list.onItemClickListener = AdapterView.OnItemClickListener{_,_,position, _ ->
             val device: BluetoothDevice = list[position]
@@ -76,7 +74,7 @@ class SelectDevice : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == REQUEST_ENABLE_BLUETOOTH){
             if (resultCode == Activity.RESULT_OK) {
-                if (mBluetoothAdapter!!.isEnabled){
+                if (mBluetoothAdapter.isEnabled){
                     Toast.makeText(applicationContext,"bluetooth as been enabled",Toast.LENGTH_SHORT).show()
                     pairedDeviceList()
                 } else {

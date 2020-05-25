@@ -4,9 +4,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:background="@color/colorPrimary"
     tools:context=".ControlActivity">
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/device_name_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="6"
+                android:text="@string/device_name_label"
+                android:textColorLink="#282828"
+                android:textSize="24sp"
+                android:textColor="@color/colorTextPrimary"/>
+
+            <TextView
+                android:id="@+id/device_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:textColor="@color/colorTextPrimary"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/device_status_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="6"
+                android:text="@string/device_status_label"
+                android:textSize="24sp"
+                android:textColor="@color/colorTextPrimary"/>
+
+            <TextView
+                android:id="@+id/device_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="24sp"
+                android:textColor="@color/colorTextPrimary"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -22,7 +85,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/photo_cout_label"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textColor="@color/colorTextPrimary"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,17 +95,20 @@
 
             <SeekBar
                 android:id="@+id/seekBar_photo_count"
+                style="@style/Widget.AppCompat.SeekBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="6"
-                android:max="99" />
+                android:max="99"
+                android:progressTint="@color/colorProgressPrimary" />
 
             <TextView
                 android:id="@+id/seekBar_photo_count_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/seek_bar_init_value" />
+                android:text="@string/seek_bar_init_value"
+                android:textColor="@color/colorTextPrimary"/>
 
         </LinearLayout>
 
@@ -50,7 +117,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/photo_duration_label"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textColor="@color/colorTextPrimary"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -62,14 +130,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="6"
-                android:max="20" />
+                android:max="20"
+                android:progressTint="@color/colorProgressPrimary" />
 
             <TextView
                 android:id="@+id/seekBar_photo_duration_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/seek_bar_init_sec_value" />
+                android:text="@string/seek_bar_init_sec_value"
+                android:textColor="@color/colorTextPrimary"/>
 
         </LinearLayout>
 
@@ -78,7 +148,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/photo_pause_label"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textColor="@color/colorTextPrimary"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -90,14 +161,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="6"
-                android:max="100" />
+                android:max="100"
+                android:progressTint="@color/colorProgressPrimary" />
 
             <TextView
                 android:id="@+id/seekBar_photo_pause_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/seek_bar_init_sec_value" />
+                android:text="@string/seek_bar_init_sec_value"
+                android:textColor="@color/colorTextPrimary"/>
 
         </LinearLayout>
 
@@ -109,21 +182,22 @@
 
             <Button
                 android:id="@+id/start_button"
-                style="@android:style/Widget.Material.Light.Button"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/start_button_text" />
+                android:text="@string/start_button_text"
+                android:textColor="@color/colorTextPrimary" />
 
             <Button
                 android:id="@+id/pause_button"
-                style="@style/Widget.AppCompat.Button"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/pause_button_text" />
 
             <Button
                 android:id="@+id/reset_button"
-                style="@style/Widget.AppCompat.Button"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/reset_button_text" />
@@ -133,7 +207,8 @@
             android:id="@+id/progress_bar_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/progress_bar_textview_text" />
+            android:text="@string/progress_bar_textview_text"
+            android:textColor="@color/colorTextPrimary"/>
 
         <ProgressBar
             android:id="@+id/progressBar3"
@@ -143,7 +218,7 @@
 
         <Button
             android:id="@+id/disconnect_button"
-            style="@style/Widget.AppCompat.Button"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/disconnect_button_text" />

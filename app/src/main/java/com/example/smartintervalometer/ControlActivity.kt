@@ -13,17 +13,20 @@ import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.control_activity.*
+import kotlinx.coroutines.*
 import java.io.IOException
+import java.util.concurrent.Executors
+import kotlin.coroutines.CoroutineContext
 
-class ControlActivity : AppCompatActivity() {
 
-    private val photoCount: Int? = 0;
-    private val duration: Int? = 0;
-    private val pause: Int? = 0;
+class ControlActivity : AppCompatActivity(), CoroutineScope {
+
+    private val job = Job()
+    private val uIScope = MainScope() // scope of the ui class
+
 
     companion object {
         var mBluetoothSocket: BluetoothSocket? = null
-        var progress: ProgressBar? = null //TODO Progressbar
         lateinit var mBluetoothAdapter: BluetoothAdapter
         var mIsConnected: Boolean = false
         lateinit var mAddress: String
@@ -33,17 +36,21 @@ class ControlActivity : AppCompatActivity() {
         const val ON_BYTE = "S"
         const val PAUSE_BYTE = "P"
         const val RESET_BYTE = "R"
-        
+        //lateinit var bluetoothThread : BluetoothThread;
     }
 
+    override val coroutineContext: CoroutineContext
+        get() = job
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.control_activity)
 
         //seekbar event listener for value display
         seekBar_photo_count.setOnSeekBarChangeListener(object : OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                var progressLocal = progress + 1;
+                val progressLocal = progress + 1;
                 seekBar_photo_count_value.text = "$progressLocal"
             }
 
@@ -57,7 +64,7 @@ class ControlActivity : AppCompatActivity() {
         })
         seekBar_photo_duration.setOnSeekBarChangeListener(object : OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                var progressLocal = progress + 1;
+                val progressLocal = progress + 1;
                 seekBar_photo_duration_value.text = "$progressLocal s";
             }
 
@@ -71,7 +78,7 @@ class ControlActivity : AppCompatActivity() {
         })
         seekBar_photo_pause.setOnSeekBarChangeListener(object : OnSeekBarChangeListener{
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                var progressLocal = progress + 1;
+                val progressLocal = progress + 1;
                 seekBar_photo_pause_value.text = "$progressLocal s";
             }
 
@@ -84,9 +91,11 @@ class ControlActivity : AppCompatActivity() {
             }
         })
 
+
         //get address and name of the device from intent
         mAddress = intent.getStringExtra(SelectDevice.EXTRA_ADDRESS)
         mName = intent.getStringExtra(SelectDevice.EXTRA_NAME)
+        device_name.text = mName
 
         //init connection to setlected device
         ConnectToDevice(this).execute()
@@ -101,7 +110,45 @@ class ControlActivity : AppCompatActivity() {
         reset_button.setOnClickListener{sendCommand(RESET_BYTE + END_BYTE)}
 
         disconnect_button.setOnClickListener{disconnect()}
+
+
+        uIScope.launch() {
+            while (true) {
+                if (mBluetoothSocket != null) {
+                    readBluetooth();
+                }
+                delay(200);
+            }
+        }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        uIScope.cancel()
+    }
+
+    private suspend fun readBluetooth() {
+        val buffer = ByteArray(1024)
+        var bytes: Int? = 0
+        var res = ""
+        withContext(Dispatchers.IO){
+            bytes = mBluetoothSocket?.inputStream?.read(buffer)
+        }
+
+        for (i:Int  in 0 until bytes!!) {
+            res += buffer[i].toChar()
+        }
+        val parts = res.split(",")
+        val countValue = parts[0].toInt()
+        val duration_value = parts[1]
+        val delay_value = parts[2]
+        val photoTaken = parts[3].toInt()
+
+
+        progressBar3.progress = (photoTaken * 100) / countValue
+    }
+
+
 
     private fun sendCommand(input: String) {
         if(mBluetoothSocket != null){
@@ -154,7 +201,7 @@ class ControlActivity : AppCompatActivity() {
             }catch (e: IOException){
                 connectSuccess = false
                 e.printStackTrace()
-                Log.e("bluetooth", e.toString());
+                Log.e("bluetooth", e.toString())
             }
             return null
         }
@@ -171,4 +218,5 @@ class ControlActivity : AppCompatActivity() {
             }
         }
     }
+
 }
